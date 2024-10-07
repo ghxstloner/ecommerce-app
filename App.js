@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons'; // Importamos los íconos
 
 import HomeScreen from './screens/HomeScreen';
 import CartScreen from './screens/CartScreen';
@@ -44,6 +45,11 @@ export default function App() {
     });
   };
 
+  const removeItemFromCart = (productId) => {
+    setCartItems((prevItems) => prevItems.filter(item => item.id !== productId));
+  };
+  
+
   const updateCartItemQuantity = (productId, action) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -64,7 +70,26 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'CategoryStackTab') {
+              iconName = 'list'; 
+            } else if (route.name === 'Cart') {
+              iconName = 'cart';
+            }
+
+            return <Icon name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#000000', // Color activo
+          tabBarInactiveTintColor: 'gray',  // Color inactivo
+          tabBarStyle: [{ display: 'flex' }] // Estilo de la barra de pestañas
+        })}
+      >
         <Tab.Screen 
           name="Home" 
           options={{ title: 'Inicio' }}
@@ -87,6 +112,7 @@ export default function App() {
             <CartScreen 
               cartItems={cartItems} 
               updateCartItemQuantity={updateCartItemQuantity} 
+              removeItemFromCart={removeItemFromCart}
               clearCart={clearCart} 
             />
           )}
