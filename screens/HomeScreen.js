@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
-import { getProductosDestacados } from '../api'; // Asume que ya tienes una función para obtener productos destacados
-import AddToCartButton from '../components/AddToCartButton'; // Importar el botón reutilizable
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { getProductosDestacados } from '../api';
+import AddToCartButton from '../components/AddToCartButton';
 
 const HomeScreen = ({ addToCart }) => {
   const [productosDestacados, setProductosDestacados] = useState([]);
@@ -20,6 +20,7 @@ const HomeScreen = ({ addToCart }) => {
       <FlatList
         data={productosDestacados}
         keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
             {item.imagenes && item.imagenes.length > 0 && (
@@ -31,21 +32,57 @@ const HomeScreen = ({ addToCart }) => {
             <Text style={styles.productName}>{item.nombre}</Text>
             <Text style={styles.productPrice}>${item.precio}</Text>
 
-            {/* Usar el botón reutilizable */}
+            {/* Botón de agregar al carrito */}
             <AddToCartButton product={item} addToCart={addToCart} />
           </View>
         )}
+        contentContainerStyle={styles.flatListContent}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  productContainer: { margin: 10 },
-  productImage: { width: 200, height: 200, resizeMode: 'cover' },
-  productName: { textAlign: 'center', marginTop: 5 },
-  productPrice: { textAlign: 'center', marginTop: 5, fontWeight: 'bold' },
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f8f8',
+    padding: 10,
+  },
+  flatListContent: {
+    justifyContent: 'space-between',
+  },
+  productContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    margin: 10,
+    flex: 1,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  productImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    resizeMode: 'cover',
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 5,
+    textAlign: 'center',
+  },
+  productPrice: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
 });
 
 export default HomeScreen;
